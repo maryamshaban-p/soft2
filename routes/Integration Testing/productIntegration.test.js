@@ -5,20 +5,20 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-// Import the product model and routes
+
 const Product = require('../models/products');
 const productRoutes = require('../product');
 
-// Create an express app for testing
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Setup upload directory for testing
+
 const uploadDir = path.join(__dirname, '..', 'public', 'uploads');
 const testDir = path.join(__dirname, '__tests__');
 
-// Ensure directories exist
+
 function ensureDirSync(dirPath) {
   try {
     fs.mkdirSync(dirPath, { recursive: true });
@@ -29,7 +29,7 @@ function ensureDirSync(dirPath) {
   }
 }
 
-// Remove directory recursively
+
 function removeDirSync(dirPath) {
   try {
     fs.rmSync(dirPath, { recursive: true, force: true });
@@ -38,14 +38,14 @@ function removeDirSync(dirPath) {
   }
 }
 
-// Ensure directories exist
+
 ensureDirSync(uploadDir);
 ensureDirSync(testDir);
 
-// Use product routes
+
 app.use('/products', productRoutes);
 
-// Setup mock database connection
+
 beforeAll(async () => {
   await mongoose.connect(process.env.MONGO_TEST_URI || 'mongodb://localhost:27017/testdb', {
     useNewUrlParser: true,
@@ -53,16 +53,16 @@ beforeAll(async () => {
   });
 });
 
-// Clear database before each test
+
 beforeEach(async () => {
   await Product.deleteMany({});
 });
 
-// Close database connection after tests
+
 afterAll(async () => {
   await mongoose.connection.close();
   
-  // Clean up test files and directories
+ 
   removeDirSync(testDir);
 });
 
@@ -75,16 +75,16 @@ describe('Product Routes', () => {
     category: 'Test Category'
   };
 
-  // Test image path for upload
+ 
   const testImagePath = path.join(testDir, 'test-image.jpg');
 
-  // Create a test image file
+ 
   beforeAll(() => {
-    // Create a dummy image file for testing
+   
     fs.writeFileSync(testImagePath, 'test image content');
   });
 
-  // Clean up test image after tests
+
   afterAll(() => {
     try {
       fs.unlinkSync(testImagePath);
@@ -111,7 +111,7 @@ describe('Product Routes', () => {
         image: expect.stringContaining('/uploads/')
       });
 
-      // Verify product was saved in database
+     
       const savedProduct = await Product.findById(res.body.product._id);
       expect(savedProduct).toBeTruthy();
     });
@@ -178,7 +178,7 @@ describe('Product Routes', () => {
       expect(res.statusCode).toBe(500);
       expect(res.body.msg).toBe('Server error');
 
-      // Restore the original implementation
+      
       Product.find.mockRestore();
     });
   });
@@ -266,7 +266,7 @@ describe('Product Routes', () => {
       expect(res.statusCode).toBe(200);
       expect(res.body.msg).toBe('Product deleted successfully');
 
-      // Verify product was deleted from database
+     
       const deletedProduct = await Product.findById(product._id);
       expect(deletedProduct).toBeNull();
     });
@@ -281,10 +281,10 @@ describe('Product Routes', () => {
     });
 
     it('should handle server error during deletion', async () => {
-      // Create a product first
+     
       const product = await Product.create(testProduct);
 
-      // Mock findByIdAndDelete to throw an error
+      
       jest.spyOn(Product, 'findByIdAndDelete').mockImplementationOnce(() => {
         throw new Error('Database error');
       });
@@ -294,7 +294,7 @@ describe('Product Routes', () => {
       expect(res.statusCode).toBe(500);
       expect(res.body.msg).toBe('Server error');
 
-      // Restore the original implementation
+     
       Product.findByIdAndDelete.mockRestore();
     });
   });
