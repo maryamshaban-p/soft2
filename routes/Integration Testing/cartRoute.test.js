@@ -2,22 +2,21 @@ const express = require('express');
 const { addToCart, getCart, removeFromCart } = require('../services/cartService');
 const cartRouter = require('../cartRoute');
 const httpMocks = require('node-mocks-http');
-const supertest = require('supertest');  // إضافة supertest
+const supertest = require('supertest'); 
 
-jest.mock('../services/cartService'); // محاكاة الخدمات
+jest.mock('../services/cartService');
 
 describe('Cart Route Handlers - Unit Tests', () => {
   let app;
 
   beforeAll(() => {
-    // إعداد تطبيق Express
     app = express();
-    app.use(express.json()); // إعداد الجسم لقراءة JSON
-    app.use('/cart', cartRouter); // توصيل الـ router
+    app.use(express.json()); 
+    app.use('/cart', cartRouter); 
   });
 
   afterEach(() => {
-    jest.clearAllMocks(); // مسح المحاكاة بعد كل اختبار
+    jest.clearAllMocks(); 
   });
 
   describe('POST /cart/add', () => {
@@ -25,7 +24,7 @@ describe('Cart Route Handlers - Unit Tests', () => {
       const mockCart = { userId: 'user123', products: [{ id: 'product1', quantity: 1 }] };
       addToCart.mockResolvedValue(mockCart);
 
-      const response = await supertest(app)  // استخدام supertest هنا
+      const response = await supertest(app)  
         .post('/cart/add')
         .send({ userId: 'user123', productId: 'product1', quantity: 1 });
 
