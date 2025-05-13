@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { addToCart, getCart, removeFromCart } = require('./services/cartService'); // ✅ تعديل المسار
+const { addToCart, getCart, removeFromCart } = require('./services/cartService'); 
 
 router.post('/add', async (req, res) => {
   try {
