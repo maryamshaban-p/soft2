@@ -7,7 +7,7 @@ const rateLimit = require("express-rate-limit");
 const User = require("./models/users");
 require("dotenv").config();
 
-// Rate limiter
+
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
@@ -15,7 +15,7 @@ const loginLimiter = rateLimit({
   message: { message: "Too many login attempts. Please try again later." }
 });
 
-// Register Route
+
 router.post("/register", async (req, res) => {
   try {
     const { name, email, phone, password, gender } = req.body;
@@ -55,13 +55,13 @@ router.post("/register", async (req, res) => {
 
     res.status(201).json({ msg: "User registered successfully", token });
   } catch (error) {
-    // Updated error message for database connection or timeout
-    console.error("Registration error:", error);  // Logging the detailed error
+   
+    console.error("Registration error:", error); 
     res.status(500).json({ msg: "Database operation timeout or connection issue", error: error.message });
   }
 });
 
-// Login Route
+
 router.post("/login", loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
