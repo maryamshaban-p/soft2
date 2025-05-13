@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { jwtMiddleware, authorize } = require('../middlewares/authMiddleware');
 
-// Mock JWT library
-jest.mock('jsonwebtoken');
 
-// Mock token in environment
+jest.mock('jsonwebtoken');
 process.env.JWT_SECRET = 'your-secret-key';
 
 describe('JWT Middleware and Authorization Tests', () => {
