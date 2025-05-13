@@ -5,7 +5,7 @@ const path = require("path");
 const Product = require("./models/products");
 const router = express.Router();
 
-// Setup multer for image uploads
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/uploads/");
@@ -19,11 +19,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Route to add a new product
+
 router.post("/add", upload.single("image"), async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : ""; // Ensure image is uploaded
+    const image = req.file ? `/uploads/${req.file.filename}` : "";
 
     const newProduct = new Product({
       name,
@@ -41,10 +41,10 @@ router.post("/add", upload.single("image"), async (req, res) => {
   }
 });
 
-// Route to get all products (optional, you can also get them filtered by category)
+
 router.get("/", async (req, res) => {
   try {
-    const products = await Product.find(); // Fetch all products
+    const products = await Product.find(); 
     res.json(products);
   } catch (err) {
     console.log(`Error fetching products: ${err}`);
@@ -52,19 +52,19 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Route to update product by ID (Edit functionality)
+
 router.put("/:id", upload.single("image"), async (req, res) => {
   try {
     const { name, description, price, category } = req.body;
-    const image = req.file ? `/uploads/${req.file.filename}` : null; // Check if a new image was uploaded
+    const image = req.file ? `/uploads/${req.file.filename}` : null; 
 
-    // Prepare update fields
+   
     const updateFields = { name, description, price, category };
     if (image) {
-      updateFields.image = image; // Update image if a new one was uploaded
+      updateFields.image = image; 
     }
 
-    // Find and update the product by ID
+    
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       updateFields,
@@ -72,7 +72,7 @@ router.put("/:id", upload.single("image"), async (req, res) => {
     );
 
     if (!updatedProduct) {
-      return res.status(404).json({ msg: "Product not found" }); // السطر 79-80
+      return res.status(404).json({ msg: "Product not found" }); 
     }
 
     res.json({ msg: "Product updated successfully", product: updatedProduct });
@@ -82,12 +82,12 @@ router.put("/:id", upload.single("image"), async (req, res) => {
   }
 });
 
-// Route to delete a product by ID
+
 router.delete("/:id", async (req, res) => {
   try {
     const result = await Product.findByIdAndDelete(req.params.id);
     if (!result) {
-      return res.status(404).json({ msg: "Product not found" }); // السطر 93-94
+      return res.status(404).json({ msg: "Product not found" }); 
     }
     res.json({ msg: "Product deleted successfully" });
   } catch (err) {
